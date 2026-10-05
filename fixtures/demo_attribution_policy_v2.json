@@ -1,0 +1,64 @@
+{
+  "policy_id": "ai-support-attribution",
+  "version": 2,
+  "title": "人工智能支持计划成效归属规则（第二期，延长业务改善去重窗口）",
+  "effective_from": "2026-07-01",
+  "default_equal_split": true,
+  "rules": {
+    "identity": [
+      {
+        "rule_id": "R1-HARD-ID",
+        "identity_types": ["business_license", "tax_number", "social_credit"],
+        "note": "营业执照、税号或统一社会信用代码相同即认定为同一实际主体"
+      }
+    ],
+    "affiliation": [
+      {
+        "rule_id": "R2-GROUP",
+        "relation_kinds": ["parent", "subsidiary", "branch"],
+        "note": "母子公司、分支机构构成共享成果组"
+      },
+      {
+        "rule_id": "R2-CHANNEL",
+        "relation_kinds": ["park_tenant", "association_member"],
+        "note": "园区入驻与协会会员关系构成共享成果组，但不因此认定同一主体"
+      }
+    ],
+    "fuzzy": [
+      {
+        "rule_id": "R3-NAME-ADDRESS",
+        "name_pattern": "星河",
+        "pattern_flags": "",
+        "weak_fields": ["address"],
+        "require_weak_match": true,
+        "note": "名称含相同字号且注册地址一致时列为疑似重复，待人工确认"
+      }
+    ],
+    "outcome": [
+      {
+        "outcome_type": "training_completed",
+        "dedup_window_days": 30,
+        "min_evidence_level": 2,
+        "max_shareholders": 2,
+        "late_evidence_creates_revision": true,
+        "publication_locks_version": true
+      },
+      {
+        "outcome_type": "platform_online",
+        "dedup_window_days": 30,
+        "min_evidence_level": 3,
+        "max_shareholders": 2,
+        "late_evidence_creates_revision": true,
+        "publication_locks_version": true
+      },
+      {
+        "outcome_type": "business_improvement",
+        "dedup_window_days": 180,
+        "min_evidence_level": 3,
+        "max_shareholders": 3,
+        "late_evidence_creates_revision": true,
+        "publication_locks_version": true
+      }
+    ]
+  }
+}
